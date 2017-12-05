@@ -53,12 +53,12 @@ public class EasyTask<T> {
         // 如果工作线程为空，直接执行call方法
         // Schedules.background() 的submit
         // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
-        mTaskManager.setFuture(mTaskProcess.submit(new RunnableWrapper(androidCallback, new Runnable() {
+        mTaskProcess.execute(new RunnableWrapper(androidCallback, new Runnable() {
             @Override
             public void run() {
                 mTask.execute(mTaskManager);
             }
-        })));
+        }));
     }
 
     // 其实是给Callback包了一层，利用主线程的Handler发送回调
