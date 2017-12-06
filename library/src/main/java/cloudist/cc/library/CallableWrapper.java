@@ -1,22 +1,25 @@
 package cloudist.cc.library;
 
+import java.util.concurrent.Callable;
+
 import cloudist.cc.library.callback.Callback;
 
 /**
- * A Runnable Wrapper to delegate {@link Runnable#run()}
+ * A Callable Wrapper to delegate {@link Callable#call()}
  */
-final class RunnableWrapper implements Runnable {
-
+final class CallableWrapper<T> implements Callable<T> {
     private Callback callback;
-    private Runnable proxy;
+    private Callable<T> proxy;
 
-    RunnableWrapper(Callback callback, Runnable proxy) {
+    CallableWrapper(Callback callback, Callable<T> proxy) {
         this.callback = callback;
         this.proxy = proxy;
     }
 
+    // 方法 submit(Callable) 和方法 submit(Runnable) 比较类似，但是区别则在于它们接收不同的参数类型。
+    // Callable 的实例与 Runnable 的实例很类似，但是 Callable 的 call() 方法可以返回壹個结果。方法 Runnable.run() 则不能返回结果。
     @Override
-    public void run() {
+    public T call() throws Exception {
         // 当子线程发生错误的时候，利用该方法catch
         Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
@@ -29,21 +32,12 @@ final class RunnableWrapper implements Runnable {
         if (callback != null) {
             callback.onStart();
         }
+
         // avoid NullPointException
-        // 执行子线程方法
-        if (proxy != null) {
-            proxy.run();
-        }
+        T t = proxy == null ? null : proxy.call();
         if (callback != null) {
             callback.onFinish();
         }
-    }
-
-    public Callback getCallback() {
-        return callback;
-    }
-
-    public void setCallback(Callback callback) {
-        this.callback = callback;
+        return t;
     }
 }

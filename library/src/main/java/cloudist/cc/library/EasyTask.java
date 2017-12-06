@@ -47,7 +47,7 @@ public class EasyTask<T> {
         return this;
     }
 
-    public void run() {
+    public Task run() {
         if (mCallbackProcess == null) {
             mCallbackProcess = Processes.mainThread();
         }
@@ -58,17 +58,18 @@ public class EasyTask<T> {
             mCallback = new DefaultCallback<>();
         }
         androidCallback = new AndroidCallback(mCallback, mCallbackProcess);
-        mTaskManager = new TaskManager<T>(mCallback);
-        mTaskManager.setCallbackProcess(mCallbackProcess);
-        // 如果工作线程为空，直接执行call方法
-        // Processes.background() 的submit
-        // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
-        mTaskProcess.execute(new RunnableWrapper(androidCallback, new Runnable() {
+        mTaskManager = new TaskManager<T>(new RunnableWrapper(androidCallback, new Runnable() {
             @Override
             public void run() {
                 mTask.call(mTaskManager);
             }
         }));
+        mTaskManager.setCallbackProcess(mCallbackProcess);
+        // 如果工作线程为空，直接执行call方法
+        // Processes.background() 的submit
+        // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
+        mTaskProcess.execute(mTaskManager.getRunnableWrapper());
+        return mTaskManager;
     }
 
     // 其实是给Callback包了一层，利用主线程的Handler发送回调

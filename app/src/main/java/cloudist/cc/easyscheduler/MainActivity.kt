@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         text.postDelayed({
             EasyTask.create<Objects> {
+                Thread.sleep(1000)
                 throw RuntimeException("故意在子线程抛出异常")
             }
                     .callbackOn(Processes.mainThread())

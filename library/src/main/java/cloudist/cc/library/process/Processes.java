@@ -6,10 +6,6 @@ import android.os.Looper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * 线程调度的配置类，这里你可以自己实现Scheduler,只需要继承 Scheduler即可,如果你不需要submit返回的Futrue对象的话，可以直接return null;
- * Created by jiang on 5/29/16.
- */
 public class Processes {
     private static int THREAD_SIZE = 5;
 
@@ -51,7 +47,7 @@ public class Processes {
         Processes.mMainProcess = mMainScheduler;
     }
 
-    // 默认为size为5的线程池
+    // 默认为size为5的线程池 TODO 提供更多的选择
     public static ETProcess background() {
         synchronized (Processes.class) {
             if (mWorkProcess == null) {
