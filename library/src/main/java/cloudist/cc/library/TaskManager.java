@@ -2,6 +2,7 @@ package cloudist.cc.library;
 
 import java.util.concurrent.Future;
 
+import cloudist.cc.library.callback.Callback;
 import cloudist.cc.library.process.ETProcess;
 
 /**

@@ -1,5 +1,7 @@
 package cloudist.cc.library;
 
+import cloudist.cc.library.callback.Callback;
+
 /**
  * A Runnable Wrapper to delegate {@link Runnable#run()}
  */

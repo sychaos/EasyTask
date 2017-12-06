@@ -1,6 +1,9 @@
 package cloudist.cc.library;
 
+import cloudist.cc.library.callback.Callback;
+import cloudist.cc.library.callback.DefaultCallback;
 import cloudist.cc.library.process.ETProcess;
+import cloudist.cc.library.process.Processes;
 
 /**
  * Created by cloudist on 2017/12/4.
@@ -19,10 +22,9 @@ public class EasyTask<T> {
     private ETProcess mTaskProcess;
 
     private EasyTask(OnExecute<T> task) {
-       this.mTask = task;
+        this.mTask = task;
     }
 
-    //JObservable 新增一个onSubscribe事件
     public static <T> EasyTask<T> create(OnExecute<T> task) {
         if (task == null) {
             throw new NullPointerException("task can not be null");
@@ -40,23 +42,31 @@ public class EasyTask<T> {
         return this;
     }
 
-    public void run(Callback<T> callback) {
+    public EasyTask<T> callback(Callback<T> callback) {
+        mCallback = callback;
+        return this;
+    }
+
+    public void run() {
         if (mCallbackProcess == null) {
-            throw new IllegalArgumentException("not appointed callbackProcess");
+            mCallbackProcess = Processes.mainThread();
         }
         if (mTaskProcess == null) {
-            throw new IllegalArgumentException("not appointed mTaskProcess");
+            mCallbackProcess = Processes.background();
         }
-        androidCallback = new AndroidCallback(callback, mCallbackProcess);
-        mTaskManager = new TaskManager<T>(callback);
+        if (mCallback == null) {
+            mCallback = new DefaultCallback<>();
+        }
+        androidCallback = new AndroidCallback(mCallback, mCallbackProcess);
+        mTaskManager = new TaskManager<T>(mCallback);
         mTaskManager.setCallbackProcess(mCallbackProcess);
         // 如果工作线程为空，直接执行call方法
-        // Schedules.background() 的submit
+        // Processes.background() 的submit
         // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
         mTaskProcess.execute(new RunnableWrapper(androidCallback, new Runnable() {
             @Override
             public void run() {
-                mTask.execute(mTaskManager);
+                mTask.call(mTaskManager);
             }
         }));
     }
@@ -109,7 +119,7 @@ public class EasyTask<T> {
     }
 
     public interface OnExecute<T> {
-        void execute(TaskManager<T> mTaskManager);
+        void call(TaskManager<T> mTaskManager);
     }
 
 }

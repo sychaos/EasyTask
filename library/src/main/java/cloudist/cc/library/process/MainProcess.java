@@ -8,14 +8,14 @@ import java.util.concurrent.Future;
  * 用于回调到主线程的Scheduler
  * Created by jiang on 5/29/16.
  */
-public class MainScheduler implements ETProcess {
+public class MainProcess implements ETProcess {
 
     private Handler mHandler;
 
-    public MainScheduler() {
+    public MainProcess() {
     }
 
-    public MainScheduler(Handler handler) {
+    public MainProcess(Handler handler) {
         mHandler = handler;
     }
 

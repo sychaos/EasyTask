@@ -6,10 +6,10 @@ import java.util.concurrent.Future;
 /**
  * Created by jiang on 5/29/16.
  */
-public class WorkScheduler implements ETProcess {
+public class WorkProcess implements ETProcess {
     public ExecutorService fixedThreadPool;
 
-    public WorkScheduler(ExecutorService fixedThreadPool) {
+    public WorkProcess(ExecutorService fixedThreadPool) {
         this.fixedThreadPool = fixedThreadPool;
     }
 
