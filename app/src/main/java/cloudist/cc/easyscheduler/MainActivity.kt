@@ -6,7 +6,6 @@ import android.widget.TextView
 import cloudist.cc.library.EasyTask
 import cloudist.cc.library.callback.DefaultCallback
 import cloudist.cc.library.process.Processes
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,15 +16,19 @@ class MainActivity : AppCompatActivity() {
         val text = findViewById<TextView>(R.id.text)
 
         text.postDelayed({
-            EasyTask.create<Objects> {
+            EasyTask.create<List<String>> {
                 Thread.sleep(1000)
-                throw RuntimeException("故意在子线程抛出异常")
+                listOf("s","sd","sds")
             }
                     .callbackOn(Processes.mainThread())
                     .runOn(Processes.background())
-                    .callback(object : DefaultCallback<Objects>() {
+                    .callback(object : DefaultCallback<List<String>>() {
                         override fun error(t: Throwable?) {
                             text.text = "error"
+                        }
+
+                        override fun onFinish(t: List<String>?) {
+                            text.text = t.toString()
                         }
                     })
                     .run()
