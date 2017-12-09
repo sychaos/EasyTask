@@ -23,7 +23,7 @@ final class RunnableWrapper implements Runnable {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
                 if (callback != null) {
-                    callback.error(e);
+                    callback.onError(e);
                 }
             }
         });

@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
                     .callbackOn(Processes.mainThread())
                     .runOn(Processes.background())
                     .callback(object : DefaultCallback<List<String>>() {
-                        override fun error(t: Throwable?) {
-                            text.text = "error"
+                        override fun onError(t: Throwable?) {
+                            text.text = "onError"
                         }
 
                         override fun onFinish(t: List<String>?) {

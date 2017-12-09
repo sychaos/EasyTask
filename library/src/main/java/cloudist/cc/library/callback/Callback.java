@@ -2,7 +2,7 @@ package cloudist.cc.library.callback;
 
 public interface Callback<T> {
 
-    void error(Throwable t);
+    void onError(Throwable t);
 
     void onStart();
 

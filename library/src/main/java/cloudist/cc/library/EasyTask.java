@@ -85,12 +85,12 @@ public class EasyTask<T> {
         }
 
         @Override
-        public void error(final Throwable t) {
+        public void onError(final Throwable t) {
             callbackProcess.execute(new Runnable() {
                 @Override
                 public void run() {
                     if (delegate != null) {
-                        delegate.error(t);
+                        delegate.onError(t);
                     }
                 }
             });

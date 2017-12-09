@@ -7,7 +7,7 @@ package cloudist.cc.library.callback;
 public class DefaultCallback<T> implements Callback<T> {
 
     @Override
-    public void error(Throwable t) {
+    public void onError(Throwable t) {
 
     }
 

@@ -24,7 +24,7 @@ public class TaskManager<T> implements Task {
 
     @Override
     public void cancel() {
-        if (isCancel == false) {
+        if (!isCancel) {
             isCancel = true;
         }
         mRunnableWrapper.setCallback(null);
