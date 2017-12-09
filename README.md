@@ -14,16 +14,16 @@
                 return list;
             }
         }).runOn(Processes.background())
-                .callbackOn(Processes.mainThread())
-                .callback(new DefaultCallback<List<String>>() {
-                    @Override
-                    public void onError(Throwable t) {
+          .callbackOn(Processes.mainThread())
+          .callback(new DefaultCallback<List<String>>() {
+              @Override
+              public void onError(Throwable t) {
 
-                    }
+              }
 
-                    @Override
-                    public void onFinish(List<String> strings) {
+              @Override
+              public void onFinish(List<String> strings) {
 
-                    }
-                }).run();
+              }
+          }).run();
 ```
