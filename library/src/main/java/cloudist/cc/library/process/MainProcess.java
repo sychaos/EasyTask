@@ -2,6 +2,7 @@ package cloudist.cc.library.process;
 
 import android.os.Handler;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
@@ -37,8 +38,13 @@ public class MainProcess implements ETProcess {
     }
 
     @Override
-    public Future<?> submit(Runnable runnable) {
-        execute(runnable);
+    public <T> Future<T> submit(Callable<T> callable) {
+        try {
+            callable.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
 }

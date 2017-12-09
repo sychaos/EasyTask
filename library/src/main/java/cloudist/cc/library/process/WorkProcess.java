@@ -1,5 +1,6 @@
 package cloudist.cc.library.process;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -24,12 +25,12 @@ public class WorkProcess implements ETProcess {
     }
 
     @Override
-    public Future<?> submit(Runnable runnable) {
+    public <T> Future<T> submit(Callable<T> callable) {
         if (fixedThreadPool == null) {
-            runnable.run();
-            return null;
+            throw new IllegalArgumentException("no ThreadPool");
         } else {
-            return fixedThreadPool.submit(runnable);
+            return fixedThreadPool.submit(callable);
         }
     }
+
 }

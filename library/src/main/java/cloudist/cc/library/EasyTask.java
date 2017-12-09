@@ -1,5 +1,7 @@
 package cloudist.cc.library;
 
+import java.util.concurrent.Callable;
+
 import cloudist.cc.library.callback.Callback;
 import cloudist.cc.library.callback.DefaultCallback;
 import cloudist.cc.library.process.ETProcess;
@@ -57,23 +59,23 @@ public class EasyTask<T> {
         if (mCallback == null) {
             mCallback = new DefaultCallback<>();
         }
-        androidCallback = new AndroidCallback(mCallback, mCallbackProcess);
-        mTaskManager = new TaskManager<T>(new RunnableWrapper(androidCallback, new Runnable() {
+        androidCallback = new AndroidCallback<T>(mCallback, mCallbackProcess);
+        mTaskManager = new TaskManager<T>(new CallableWrapper<>(androidCallback, new Callable<T>() {
             @Override
-            public void run() {
-                mTask.call(mTaskManager);
+            public T call() {
+                return mTask.call(mTaskManager);
             }
         }));
         mTaskManager.setCallbackProcess(mCallbackProcess);
         // 如果工作线程为空，直接执行call方法
         // Processes.background() 的submit
         // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
-        mTaskProcess.execute(mTaskManager.getRunnableWrapper());
+        mTaskProcess.submit(mTaskManager.getCallableWrapper());
         return mTaskManager;
     }
 
     // 其实是给Callback包了一层，利用主线程的Handler发送回调
-    private static class AndroidCallback implements Callback {
+    private static class AndroidCallback<T> implements Callback {
         private Callback delegate;
         private ETProcess callbackProcess;
 
@@ -107,20 +109,21 @@ public class EasyTask<T> {
         }
 
         @Override
-        public void onFinish() {
+        public void onFinish(final Object o) {
             callbackProcess.execute(new Runnable() {
                 @Override
                 public void run() {
                     if (delegate != null) {
-                        delegate.onFinish();
+                        delegate.onFinish(o);
                     }
                 }
             });
         }
+
     }
 
     public interface OnExecute<T> {
-        void call(TaskManager<T> mTaskManager);
+        T call(TaskManager<T> mTaskManager);
     }
 
 }

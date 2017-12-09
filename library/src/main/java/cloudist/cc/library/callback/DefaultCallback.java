@@ -17,7 +17,7 @@ public class DefaultCallback<T> implements Callback<T> {
     }
 
     @Override
-    public void onFinish() {
+    public void onFinish(T t) {
 
     }
 }

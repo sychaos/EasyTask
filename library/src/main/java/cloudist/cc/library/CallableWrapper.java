@@ -36,8 +36,16 @@ final class CallableWrapper<T> implements Callable<T> {
         // avoid NullPointException
         T t = proxy == null ? null : proxy.call();
         if (callback != null) {
-            callback.onFinish();
+            callback.onFinish(t);
         }
         return t;
+    }
+
+    public Callback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 }

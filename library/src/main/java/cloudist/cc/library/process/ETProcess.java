@@ -19,9 +19,9 @@ public interface ETProcess {
     /**
      * 会返回Futrue对象
      *
-     * @param runnable
+     * @param callable
      * @return
      */
-    public Future<?> submit(Runnable runnable);
+    public <T> Future<T> submit(Callable<T> callable);
 
 }

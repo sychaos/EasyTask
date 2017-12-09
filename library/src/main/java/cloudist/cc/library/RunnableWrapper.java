@@ -5,6 +5,7 @@ import cloudist.cc.library.callback.Callback;
 /**
  * A Runnable Wrapper to delegate {@link Runnable#run()}
  */
+@Deprecated
 final class RunnableWrapper implements Runnable {
 
     private Callback callback;
@@ -35,7 +36,7 @@ final class RunnableWrapper implements Runnable {
             proxy.run();
         }
         if (callback != null) {
-            callback.onFinish();
+//            callback.onFinish();
         }
     }
 
