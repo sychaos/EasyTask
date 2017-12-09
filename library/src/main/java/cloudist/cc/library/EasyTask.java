@@ -49,6 +49,7 @@ public class EasyTask<T> {
         return this;
     }
 
+    // TODO 可以考虑返回一个EasyTask实例这样就可以。。。流式进行了
     public Task run() {
         if (mCallbackProcess == null) {
             mCallbackProcess = Processes.mainThread();
@@ -60,6 +61,7 @@ public class EasyTask<T> {
             mCallback = new DefaultCallback<>();
         }
         androidCallback = new AndroidCallback<T>(mCallback, mCallbackProcess);
+        // 是否可以不传mTaskManager
         mTaskManager = new TaskManager<T>(new CallableWrapper<>(androidCallback, new Callable<T>() {
             @Override
             public T call() {
