@@ -4,6 +4,7 @@ import android.os.Handler;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * 用于回调到主线程的Scheduler
@@ -39,11 +40,9 @@ public class MainProcess implements ETProcess {
 
     @Override
     public <T> Future<T> submit(Callable<T> callable) {
-        try {
-            callable.call();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        FutureTask<T> futureTask = new FutureTask(callable);
+        Thread thread = new Thread(futureTask);
+        thread.start();
         return null;
     }
 
