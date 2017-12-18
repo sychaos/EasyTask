@@ -1,22 +1,19 @@
 package cloudist.cc.library;
 
+import java.util.concurrent.Future;
+
 import cloudist.cc.library.process.ETProcess;
 
 public class TaskManager<T> implements Task {
 
     private ETProcess mCallbackProcess;
     private boolean isCancel;
-    private RunnableWrapper mRunnableWrapper;
     private CallableWrapper mCallableWrapper;
-
-    public TaskManager(RunnableWrapper runnableWrapper) {
-        mRunnableWrapper = runnableWrapper;
-    }
+    private Future mFuture;
 
     public TaskManager(CallableWrapper callableWrapper) {
         mCallableWrapper = callableWrapper;
     }
-
 
     public void setCallbackProcess(ETProcess mCallbackProcess) {
         this.mCallbackProcess = mCallbackProcess;
@@ -27,8 +24,10 @@ public class TaskManager<T> implements Task {
         if (!isCancel) {
             isCancel = true;
         }
-        mRunnableWrapper.setCallback(null);
         mCallableWrapper.setCallback(null);
+        if (mFuture != null) {
+            mFuture.cancel(true);
+        }
     }
 
     @Override
@@ -36,12 +35,12 @@ public class TaskManager<T> implements Task {
         return isCancel;
     }
 
-    public RunnableWrapper getRunnableWrapper() {
-        return mRunnableWrapper;
+    public Future getFuture() {
+        return mFuture;
     }
 
-    public void setRunnableWrapper(RunnableWrapper mRunnableWrapper) {
-        this.mRunnableWrapper = mRunnableWrapper;
+    public void setFuture(Future mFuture) {
+        this.mFuture = mFuture;
     }
 
     public CallableWrapper getCallableWrapper() {

@@ -72,7 +72,7 @@ public class EasyTask<T> {
         // 如果工作线程为空，直接执行call方法
         // Processes.background() 的submit
         // fixedThreadPool为空直接执行，不为空加入线程池 执行call方法
-        mTaskProcess.submit(mTaskManager.getCallableWrapper());
+        mTaskManager.setFuture(mTaskProcess.submit(mTaskManager.getCallableWrapper()));
         return mTaskManager;
     }
 
